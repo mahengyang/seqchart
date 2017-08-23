@@ -77,7 +77,6 @@ draw-node: function ["画节点" nodes] [
         print ["开始画节点" node as-pair x y]
         append my-draw compose [font default-font]
         append my-draw reduce ['text (as-pair x + 5 y + 5) node]
-        append my-draw compose [line-width 2 pen blue ]
         append my-draw compose [box (as-pair x y) (as-pair x + node-width y + node-height)]
         ; 画竖线
         append my-draw compose [line-width 1 pen black]
@@ -134,16 +133,20 @@ draw-flow: function ["画流程" y] [
 my-draw: []
 nodes: #()
 foreach flow data [put nodes flow/1 1] ; 提取所有节点
-y: draw-node keys-of nodes ; 画节点
-draw-flow y ; 画流程箭头
-
 node-count: length? keys-of nodes
 width: (node-count * node-width) + ((node-count - 1) * node-gap) + (edge * 2)
 flow-count: length? data
 height: flow-count * flow-gap + (edge * 2) + node-height
 draw-size: as-pair width height
+vline-height: height
+
+y: draw-node keys-of nodes ; 画节点
+draw-flow y ; 画流程箭头
+
 view [
     title "流程图"
-	base draw-size
-	draw  my-draw
+    backdrop white
+    origin 0x0
+	base 250.250.250 draw-size 
+	draw my-draw 
 ]
